@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- displays site properly based on user's device -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  <link rel="stylesheet" type="text/css" href="index.css">
+  <title>Frontend Mentor | Results summary component</title>
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    .attribution {
+      font-size: 11px;
+      text-align: center;
+    }
+    .attribution a {
+      color: hsl(228, 45%, 44%);
+    }
+  </style>
+</head>
+
+<body> 
+  <div class="principal-container">
+    <div id="result-container">
+      <p id="title-result" class="result-children">Your Result</p>     
+      <div id="totalscore-result">
+        <!-- aquí va el "score" total -->
+      </div>
+      <p id="of100-result"> of 100</p>
+      <div id="text-result">
+        <!-- aquí van el texto de aprobación o reprobación del test -->
+      </div>
+    </div>
+    <div id="summary-container" >
+      <p id="title-summary" class="summary-children">Summary</p>
+      <div id="summary" class="summary-children">
+        <!-- Aquí van los "icons", las "categories" y los "scores" de "summary"-->
+      </div>
+      <button id="buttom-continue" class="summary-children" title="continue" >Continue</button>
+    </div>
+  </div>
+
+  <script>
+    let URL = 'data.json';
+    /* Script para summary */
+    fetch(URL).then(response =>response.json()).then(data => {
+      let totalScores = 0;
+      let myValue = 0;
+      let cont = 0;
+      data.forEach( dat => {
+        cont += 1;
+        let scoreValues = parseInt(dat.score);
+        totalScores = totalScores + scoreValues;
+        myValue = Math.round(totalScores / cont);
+      });
+      console.log();
+
+      const summaryList = document.getElementById('summary')
+      const resultScore = document.getElementById('totalscore-result');
+      const textResult = document.getElementById('text-result');
+
+      /* Script para Result */
+      const spanElementsResult = document.createElement('span');
+      spanElementsResult.innerText = myValue;
+      spanElementsResult.setAttribute('id','totalscore-result-children')
+      resultScore.appendChild(spanElementsResult);
+
+      const p1ElementsResult = document.createElement('p');
+      const p2ElementsResult = document.createElement('p');
+
+      if (myValue > 65){
+        p1ElementsResult.innerText = 'Great';
+        p2ElementsResult.innerText = 'You scored higher than 65% of the people who have taken these tests.';
+        p1ElementsResult.setAttribute('id','great-result');
+        p2ElementsResult.setAttribute('id','phrase-result');
+        textResult.appendChild(p1ElementsResult);
+        textResult.appendChild(p2ElementsResult);
+      }else{
+        p1ElementsResult.innerText = 'Bad';
+        p2ElementsResult.innerText = 'You scored lower than 65% of the people who have taken these tests.';
+        p1ElementsResult.setAttribute('id','great-result');
+        p2ElementsResult.setAttribute('id','phrase-result');
+        textResult.appendChild(p1ElementsResult);
+        textResult.appendChild(p2ElementsResult);
+      }
+
+      data.forEach(dat => {    
+        /* Script para Summary */
+        const imgElementsSummary = document.createElement('img');
+        const pElementsSummary = document.createElement('p');
+        const spanElementsSummary = document.createElement('span');
+        imgElementsSummary.setAttribute('src', dat.icon);
+        pElementsSummary.innerText = dat.category;
+        pElementsSummary.setAttribute('class','category-summary');
+        spanElementsSummary.innerText = dat.score + ' / 100';
+        spanElementsSummary.setAttribute('class','score-summary');
+        summaryList.appendChild(imgElementsSummary);
+        summaryList.appendChild(pElementsSummary);
+        summaryList.appendChild(spanElementsSummary);
+      }); 
+    });
+
+  </script>
+
+</body>
+</html>
